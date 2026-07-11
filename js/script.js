@@ -93,8 +93,49 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         registeredAt: new Date().toISOString()
     };
     
-    // حفظ في localStorage (محاكاة قاعدة البيانات)
-    let students = JSON.parse(localStorage.getItem('elh_students') || '[]');
+    async function handleRegistration(studentData) {
+    try {
+        const { db, auth, firebaseDB } = window.firebaseApp;
+        
+        // Check username availability
+        const available = await firebaseDB.checkUsernameAvailability(db, studentData.username);
+        if (!available) {
+            alert('اسم المستخدم موجود مسبقاً! اختر اسماً آخر');
+            return;
+        }
+        
+        // Create auth account
+        const result = await firebaseDB.createAccount(auth, studentData.email, studentData.password);
+        if (!result.success) {
+            alert('خطأ: ' + result.error);
+            return;
+        }
+        
+        // Save student data
+        await firebaseDB.saveStudent(db, {
+            studentName: studentData.name,
+            username: studentData.username,
+            grade: studentData.grade,
+            guardian: studentData.guardian,
+            whatsappNumber: studentData.whatsapp,
+            mobileNumber: studentData.mobile,
+            email: studentData.email
+        });
+        
+        // Show success
+        const successScreen = document.getElementById('successScreen');
+        successScreen.style.display = 'flex';
+        
+        setTimeout(() => {
+            successScreen.style.display = 'none';
+            showPlacementTest();
+        }, 3000);
+        
+    } catch (error) {
+        console.error("Registration error:", error);
+        alert('حدث خطأ: ' + error.message);
+    }
+});
     
     // التحقق من عدم تكرار اسم المستخدم
     const existing = students.find(s => s.username === username);
