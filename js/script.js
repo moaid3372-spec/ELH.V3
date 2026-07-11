@@ -51,7 +51,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
 });
 
 // ===== نموذج التسجيل =====
-document.getElementById('registerForm').addEventListener('submit', function(e) {
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const name = document.getElementById('regName').value.trim();
@@ -77,54 +77,51 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
         return;
     }
+
+    // التحقق من البريد الإلكتروني
+    if (!email) {
+        alert('البريد الإلكتروني مطلوب!');
+        return;
+    }
     
-    // حفظ بيانات الطالب
-    const studentData = {
-        name: name,
-        username: username,
-        password: password,
-        grade: grade,
-        father: father,
-        mother: mother,
-        guardian: guardian,
-        whatsapp: whatsapp,
-        mobile: mobile,
-        email: email,
-        registeredAt: new Date().toISOString()
-    };
-    
-    async function handleRegistration(studentData) {
     try {
         const { db, auth, firebaseDB } = window.firebaseApp;
         
         // Check username availability
-        const available = await firebaseDB.checkUsernameAvailability(db, studentData.username);
+        const available = await firebaseDB.checkUsernameAvailability(db, username);
         if (!available) {
             alert('اسم المستخدم موجود مسبقاً! اختر اسماً آخر');
             return;
         }
         
         // Create auth account
-        const result = await firebaseDB.createAccount(auth, studentData.email, studentData.password);
+        const result = await firebaseDB.createAccount(auth, email, password);
         if (!result.success) {
             alert('خطأ: ' + result.error);
             return;
         }
         
         // Save student data
-        await firebaseDB.saveStudent(db, {
-            studentName: studentData.name,
-            username: studentData.username,
-            grade: studentData.grade,
-            guardian: studentData.guardian,
-            whatsappNumber: studentData.whatsapp,
-            mobileNumber: studentData.mobile,
-            email: studentData.email
-        });
+        const studentData = {
+            studentName: name,
+            username: username,
+            grade: grade,
+            guardian: guardian,
+            whatsappNumber: whatsapp,
+            mobileNumber: mobile,
+            email: email,
+            father: father,
+            mother: mother
+        };
+        
+        await firebaseDB.saveStudent(db, studentData);
         
         // Show success
         const successScreen = document.getElementById('successScreen');
         successScreen.style.display = 'flex';
+        
+        // Clear form
+        document.getElementById('registerForm').reset();
         
         setTimeout(() => {
             successScreen.style.display = 'none';
@@ -135,28 +132,6 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         console.error("Registration error:", error);
         alert('حدث خطأ: ' + error.message);
     }
-});
-    
-    // التحقق من عدم تكرار اسم المستخدم
-    const existing = students.find(s => s.username === username);
-    if (existing) {
-        alert('اسم المستخدم موجود مسبقاً! اختر اسماً آخر');
-        return;
-    }
-    
-    students.push(studentData);
-    localStorage.setItem('elh_students', JSON.stringify(students));
-    localStorage.setItem('elh_current_student', JSON.stringify(studentData));
-    
-    // إظهار شاشة النجاح
-    const successScreen = document.getElementById('successScreen');
-    successScreen.style.display = 'flex';
-    
-    // التحويل لاختبار تحديد المستوى بعد 3 ثوانٍ
-    setTimeout(function() {
-        successScreen.style.display = 'none';
-        showPlacementTest();
-    }, 3000);
 });
 
 // ===== إظهار اختبار تحديد المستوى =====
@@ -312,23 +287,6 @@ function showResult() {
     
     document.getElementById('resultLevel').textContent = level;
     document.getElementById('resultMessage').textContent = message;
-    
-    // حفظ النتيجة
-    const currentStudent = JSON.parse(localStorage.getItem('elh_current_student'));
-    if (currentStudent) {
-        currentStudent.testScore = score;
-        currentStudent.testLevel = level;
-        currentStudent.testPercentage = percentage;
-        localStorage.setItem('elh_current_student', JSON.stringify(currentStudent));
-        
-        // تحديث في قائمة الطلاب
-        let students = JSON.parse(localStorage.getItem('elh_students') || '[]');
-        const studentIndex = students.findIndex(s => s.username === currentStudent.username);
-        if (studentIndex !== -1) {
-            students[studentIndex] = currentStudent;
-            localStorage.setItem('elh_students', JSON.stringify(students));
-        }
-    }
 }
 
 function goToDashboard() {
@@ -342,42 +300,75 @@ function goToDashboard() {
 }
 
 // ===== نموذج تسجيل الدخول =====
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    const username = document.getElementById('loginUsername').value.trim();
+    const email = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
     
-    const students = JSON.parse(localStorage.getItem('elh_students') || '[]');
-    const student = students.find(s => s.username === username && s.password === password);
-    
-    if (student) {
-        localStorage.setItem('elh_current_student', JSON.stringify(student));
-        alert('تم تسجيل الدخول بنجاح! مرحباً ' + student.name);
+    try {
+        const { auth, firebaseDB } = window.firebaseApp;
         
-        // إذا كان قد أ完成了 الاختبار، اذهب للوحة التحكم
-        if (student.testScore !== undefined) {
-            goToDashboard();
-        } else {
+        const result = await firebaseDB.loginUser(auth, email, password);
+        
+        if (result.success) {
+            alert('تم تسجيل الدخول بنجاح! مرحباً');
+            document.getElementById('loginForm').reset();
             showPlacementTest();
+        } else {
+            alert('خطأ: ' + result.error);
         }
-    } else {
-        alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+    } catch (error) {
+        console.error("Login error:", error);
+        alert('حدث خطأ في تسجيل الدخول: ' + error.message);
     }
 });
 
 // ===== نموذج استعادة كلمة المرور =====
-document.getElementById('forgotForm').addEventListener('submit', function(e) {
+document.getElementById('forgotForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const input = document.getElementById('forgotInput').value.trim();
-    alert('تم إرسال رابط استعادة كلمة المرور إلى: ' + input);
+    const email = document.getElementById('forgotInput').value.trim();
+    
+    try {
+        const { auth, firebaseDB } = window.firebaseApp;
+        
+        const result = await firebaseDB.resetPassword(auth, email);
+        
+        if (result.success) {
+            alert('تم إرسال رابط استعادة كلمة المرور إلى: ' + email);
+            document.getElementById('forgotForm').reset();
+        } else {
+            alert('خطأ: ' + result.error);
+        }
+    } catch (error) {
+        console.error("Reset password error:", error);
+        alert('حدث خطأ: ' + error.message);
+    }
 });
 
 // ===== نموذج التواصل =====
-document.getElementById('contactForm').addEventListener('submit', function(e) {
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
-    e.target.reset();
+    
+    const name = this.querySelector('input[type="text"]').value.trim();
+    const email = this.querySelector('input[type="email"]').value.trim();
+    const message = this.querySelector('textarea').value.trim();
+    
+    try {
+        const { db, firebaseDB } = window.firebaseApp;
+        
+        await firebaseDB.saveContactMessage(db, {
+            name: name,
+            phone: email,
+            message: message
+        });
+        
+        alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+        this.reset();
+    } catch (error) {
+        console.error("Contact form error:", error);
+        alert('حدث خطأ: ' + error.message);
+    }
 });
 
 // ===== تأثير التمرير على شريط التنقل =====
