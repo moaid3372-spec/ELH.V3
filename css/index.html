@@ -1,0 +1,1613 @@
+<!<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ELH — English Learning Hub</title>
+
+    <meta
+        name="description"
+        content="ELH is a Human Development Platform teaching British English while building confidence, curiosity, creativity and lifelong learning."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- الاسم الصحيح حسب ملفك الحالي -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+    <style>
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8D48B;
+            --gold-dark: #8B6914;
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --surface: #16213e;
+            --card: #0f3460;
+            --text: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --shadow: 0 10px 40px rgba(0,0,0,0.3);
+            --nav-bg: rgba(26, 26, 46, 0.95);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --text: #2d2d2d;
+            --text-secondary: #666666;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .welcome-content {
+            text-align: center;
+            padding: 20px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .welcome-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px rgba(201, 168, 76, 0.3);
+            animation: welcomePulse 3s ease-in-out infinite;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .welcome-image-fallback {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 20px 60px rgba(201, 168, 76, 0.3);
+        }
+
+        @keyframes welcomePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 20px 60px rgba(201, 168, 76, 0.3); }
+            50% { transform: scale(1.03); box-shadow: 0 25px 70px rgba(201, 168, 76, 0.5); }
+        }
+
+        .welcome-overlay { margin-top: 30px; }
+
+        .welcome-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(201, 168, 76, 0.5);
+            font-weight: 900;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            margin-bottom: 30px;
+        }
+
+        .btn-enter {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-enter:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(201, 168, 76, 0.5);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo { cursor: pointer; }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 0 2px 10px rgba(201, 168, 76, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover { color: var(--gold); }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .btn-nav {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #1a1a2e !important;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+        }
+
+        .btn-nav::after { display: none; }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--gold);
+            transform: rotate(180deg);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+
+        .hero-content {
+            max-width: 700px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(201, 168, 76, 0.4);
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.4s both;
+            line-height: 2;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #1a1a2e;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(201, 168, 76, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 12px 33px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold);
+            color: #1a1a2e;
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: var(--card);
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        .card-1 { top: 20%; right: 10%; animation-delay: 0s; }
+        .card-2 { top: 50%; left: 5%; animation-delay: 1s; }
+        .card-3 { bottom: 20%; right: 15%; animation-delay: 2s; }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .section { padding: 80px 20px; }
+        .section-alt { background: var(--surface); }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+   </style>
+       <style>
+        .about-grid, .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .about-card, .feature-card {
+            background: var(--card);
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .about-card:hover, .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .about-card .icon, .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .about-card h3, .feature-card h3 {
+            color: var(--gold);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .about-card p, .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.9;
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .program-card {
+            background: var(--card);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .program-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #1a1a2e;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .program-card h3 {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .program-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .program-features li {
+            padding: 8px 0;
+            padding-right: 25px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .program-features li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .development-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .dev-item {
+            background: var(--card);
+            padding: 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .dev-item:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+
+        .dev-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .auth-form {
+            background: var(--card);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .auth-form h3 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid rgba(201, 168, 76, 0.3);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
+        }
+
+        .btn-full { width: 100%; margin-top: 10px; }
+
+        .form-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .form-link:hover { text-decoration: underline; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .success-modal {
+            background: var(--card);
+            padding: 50px;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 2px solid var(--gold);
+        }
+
+        .success-icon { font-size: 4rem; margin-bottom: 20px; }
+
+        .success-modal h2 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(201, 168, 76, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .test-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .test-container h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .test-progress { margin-bottom: 30px; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(201, 168, 76, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .question-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            background: var(--surface);
+            border: 2px solid rgba(201, 168, 76, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: right;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .option-btn:hover {
+            border-color: var(--gold);
+            background: rgba(201, 168, 76, 0.1);
+        }
+
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+
+        .option-btn.correct {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .option-btn.wrong {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.2);
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .result-level {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gold);
+            margin: 20px 0;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .contact-icon { font-size: 2rem; }
+
+        .contact-item h3 {
+            color: var(--gold);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .contact-item a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .contact-item a:hover { color: var(--gold); }
+
+        .contact-form {
+            background: var(--card);
+            padding: 35px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+        }
+
+        .footer {
+            background: #0d1117;
+            padding: 60px 20px 20px;
+            color: #b0b0b0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-col h3 {
+            color: var(--gold);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-col h4 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 8px; }
+
+        .footer-col ul li a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover { color: var(--gold); }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            font-size: 1.5rem;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover { transform: scale(1.2); }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(201, 168, 76, 0.2);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                border-top: 2px solid rgba(201, 168, 76, 0.2);
+            }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: flex; }
+            .hero-title { font-size: 2.2rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .section-title { font-size: 1.8rem; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .welcome-title { font-size: 1.8rem; }
+            .floating-card { display: none; }
+            .auth-form { padding: 25px; }
+            .test-container { padding: 25px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .programs-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .development-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 3px;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+    </style>
+</head><body>
+
+    <!-- شاشة الترحيب -->
+    <div id="welcomeScreen" class="welcome-screen" role="dialog" aria-label="شاشة الترحيب">
+        <div class="welcome-content">
+            <<img
+    class="welcome-image"
+    src="assets/ELH.welcome.jpg"
+    alt="Welcome to English Learning Hub"
+    width="720"
+    height="480"
+    fetchpriority="high"
+>
+                <button class="btn-enter" onclick="enterSite()">ادخل إلى المنصة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="التنقل الرئيسي">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">ELH</span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="nav-link">الرئيسية</a></li>
+                <li><a href="#about" class="nav-link">من نحن</a></li>
+                <li><a href="#programs" class="nav-link">البرامج</a></li>
+                <li><a href="#features" class="nav-link">المميزات</a></li>
+                <li><a href="#contact" class="nav-link">تواصل</a></li>
+                <li><a href="#login" class="nav-link btn-nav">تسجيل الدخول</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل الوضع">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" onclick="toggleMenu()" aria-label="القائمة" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- الصفحة الرئيسية -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">English Learning Hub</h1>
+            <p class="hero-subtitle">شركاء في بناء الإنسان</p>
+            <p class="hero-desc">منصة تعليمية إنسانية تطور اللغة الإنجليزية وتنمي الثقة والإبداع والتفكير النقدي ومهارات التواصل لدى قادة المستقبل</p>
+            <div class="hero-buttons">
+                <a href="#register" class="btn-primary">ابدأ رحلتك الآن</a>
+                <a href="#about" class="btn-secondary">تعرف علينا</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="floating-card card-1">📚 تعلم ممتع</div>
+            <div class="floating-card card-2">🎯 تعلم تكيفي</div>
+            <div class="floating-card card-3">🤖 ذكاء اصطناعي</div>
+        </div>
+    </section>
+
+    <!-- من نحن -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">من نحن</h2>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="icon">🎯</div>
+                    <h3>رسالتنا</h3>
+                    <p>شركاء في بناء الإنسان من خلال تعليم اللغة الإنجليزية بطريقة تنمي الشخصية والمهارات الحياتية</p>
+                </div>
+                <div class="about-card">
+                    <div class="icon">👁️</div>
+                    <h3>رؤيتنا</h3>
+                    <p>أن نكون المنصة الرائدة في التعليم الإنساني الذي يجمع بين التميز الأكاديمي والتنمية الشاملة للطالب</p>
+                </div>
+                <div class="about-card">
+                    <div class="icon">💎</div>
+                    <h3>قيمنا</h3>
+                    <p>التنمية البشرية، التميز التعليمي، الابتكار، الشراكة الأسرية، التعلم مدى الحياة، الفضول، الثقة، المسؤولية</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- البرامج -->
+    <section id="programs" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">برامجنا التعليمية</h2>
+            <div class="programs-grid">
+                <div class="program-card">
+                    <div class="program-badge">المرحلة الابتدائية</div>
+                    <h3>Primary 1 - 6</h3>
+                    <p>تأسيس قوي في اللغة الإنجليزية من خلال القصص والألعاب والأنشطة التفاعلية</p>
+                    <ul class="program-features">
+                        <li>وحدات تعليمية متدرجة</li>
+                        <li>قصص مشوقة وتفاعلية</li>
+                        <li>ألعاب تعليمية ممتعة</li>
+                        <li>أنشطة بناء الثقة</li>
+                    </ul>
+                </div>
+                <div class="program-card">
+                    <div class="program-badge">المرحلة الإعدادية</div>
+                    <h3>Prep 1 - 3</h3>
+                    <p>تطوير المهارات اللغوية المتقدمة مع التركيز على التفكير النقدي والتواصل</p>
+                    <ul class="program-features">
+                        <li>محادثة متقدمة</li>
+                        <li>كتابة إبداعية</li>
+                        <li>تحليل نصوص أدبية</li>
+                        <li>مشاريع بحثية</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>    <!-- المميزات -->
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title">مميزات المنصة</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>ذكاء اصطناعي</h3>
+                    <p>تعلم تكيفي، تحليل النطق، تقييم الكتابة، تصحيح القواعد، تعلم شخصي مخصص لكل طالب</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>تتبع التقدم</h3>
+                    <p>لوحة تحكم شاملة للطلاب وأولياء الأمور والمعلمين مع تقارير مفصلة وتحليلات ذكية</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>التعلم باللعب</h3>
+                    <p>نظام إنجازات وأوسمة ومكافآت يحفز الطلاب على الاستمرار والتفوق</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h3>عالم القصص</h3>
+                    <p>قصص تفاعلية مصورة تنمي الخيال والفضول ومهارات القراءة والاستماع</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍👩‍👧</div>
+                    <h3>شراكة أسرية</h3>
+                    <p>تحديثات واتساب فورية، تقارير تقدم دورية، توصيات تعليمية مخصصة للأهل</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👩‍🏫</div>
+                    <h3>مساعد المعلم</h3>
+                    <p>أدوات ذكية متقدمة لتخطيط الدروس وتقييم الطلاب وإعداد التقارير الأكاديمية</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- تنمية الإنسان -->
+    <section class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">ننمي الإنسان</h2>
+            <div class="development-grid">
+                <div class="dev-item"><span class="dev-icon">💪</span> الثقة</div>
+                <div class="dev-item"><span class="dev-icon">🔍</span> الفضول</div>
+                <div class="dev-item"><span class="dev-icon">🎨</span> الإبداع</div>
+                <div class="dev-item"><span class="dev-icon">💬</span> التواصل</div>
+                <div class="dev-item"><span class="dev-icon">🧠</span> التفكير النقدي</div>
+                <div class="dev-item"><span class="dev-icon">🤝</span> التعاون</div>
+                <div class="dev-item"><span class="dev-icon">🦅</span> الاستقلالية</div>
+                <div class="dev-item"><span class="dev-icon">🔥</span> المثابرة</div>
+                <div class="dev-item"><span class="dev-icon">🌱</span> عقلية النمو</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- التسجيل -->
+    <section id="register" class="section">
+        <div class="container">
+            <h2 class="section-title">ابدأ رحلتك التعليمية</h2>
+            <div class="form-container">
+                <form id="registerForm" class="auth-form">
+                    <h3>تسجيل طالب جديد</h3>
+                    <div class="form-group">
+                        <label for="regName">اسم الطالب</label>
+                        <input type="text" id="regName" required placeholder="أدخل اسم الطالب الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label for="regUsername">اسم المستخدم</label>
+                        <input type="text" id="regUsername" required placeholder="اختر اسم مستخدم بالإنجليزية">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">كلمة المرور</label>
+                        <input type="password" id="regPassword" required placeholder="6 أحرف على الأقل">
+                    </div>
+                    <div class="form-group">
+                        <label for="regConfirmPassword">تأكيد كلمة المرور</label>
+                        <input type="password" id="regConfirmPassword" required placeholder="أعد إدخال كلمة المرور">
+                    </div>
+                    <div class="form-group">
+                        <label for="regGrade">المرحلة الدراسية</label>
+                        <select id="regGrade" required>
+                            <option value="">اختر المرحلة</option>
+                            <optgroup label="المرحلة الابتدائية">
+                                <option value="primary1">الصف الأول الابتدائي</option>
+                                <option value="primary2">الصف الثاني الابتدائي</option>
+                                <option value="primary3">الصف الثالث الابتدائي</option>
+                                <option value="primary4">الصف الرابع الابتدائي</option>
+                                <option value="primary5">الصف الخامس الابتدائي</option>
+                                <option value="primary6">الصف السادس الابتدائي</option>
+                            </optgroup>
+                            <optgroup label="المرحلة الإعدادية">
+                                <option value="prep1">الصف الأول الإعدادي</option>
+                                <option value="prep2">الصف الثاني الإعدادي</option>
+                                <option value="prep3">الصف الثالث الإعدادي</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="regFather">اسم الأب</label>
+                        <input type="text" id="regFather" required placeholder="اسم الأب الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label for="regMother">اسم الأم</label>
+                        <input type="text" id="regMother" required placeholder="اسم الأم الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label for="regGuardian">ولي الأمر (اختياري)</label>
+                        <input type="text" id="regGuardian" placeholder="اسم ولي الأمر إن لم يكن الأب أو الأم">
+                    </div>
+                    <div class="form-group">
+                        <label for="regWhatsapp">رقم واتساب ولي الأمر</label>
+                        <input type="tel" id="regWhatsapp" required placeholder="لتلقي إشعارات التقدم">
+                    </div>
+                    <div class="form-group">
+                        <label for="regMobile">رقم الموبايل</label>
+                        <input type="tel" id="regMobile" required placeholder="رقم الموبايل الأساسي">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">البريد الإلكتروني (اختياري)</label>
+                        <input type="email" id="regEmail" placeholder="البريد الإلكتروني لولي الأمر">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">سجل الآن وابدأ الرحلة</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- شاشة النجاح -->
+    <div id="successScreen" class="modal-overlay" style="display:none;">
+        <div class="success-modal">
+            <div class="success-icon">🎉</div>
+            <h2>تم التسجيل بنجاح!</h2>
+            <p>مرحباً بك في عائلة ELH</p>
+            <p>جاري تحويلك إلى اختبار تحديد المستوى...</p>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>    <!-- تسجيل الدخول -->
+    <section id="login" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">تسجيل الدخول</h2>
+            <div class="form-container">
+                <form id="loginForm" class="auth-form">
+                    <h3>دخول الطلاب وأولياء الأمور</h3>
+                    <div class="form-group">
+                        <label for="loginUsername">اسم المستخدم</label>
+                        <input type="text" id="loginUsername" required placeholder="اسم المستخدم">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">كلمة المرور</label>
+                        <input type="password" id="loginPassword" required placeholder="كلمة المرور">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">دخول</button>
+                    <a href="#forgot" class="form-link">نسيت كلمة المرور؟</a>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- نسيت كلمة المرور -->
+    <section id="forgot" class="section">
+        <div class="container">
+            <h2 class="section-title">استعادة كلمة المرور</h2>
+            <div class="form-container">
+                <form id="forgotForm" class="auth-form">
+                    <h3>إعادة تعيين كلمة المرور</h3>
+                    <div class="form-group">
+                        <label for="forgotInput">البريد الإلكتروني أو رقم الموبايل</label>
+                        <input type="text" id="forgotInput" required placeholder="أدخل البريد أو رقم الموبايل المسجل">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">إرسال رابط الاستعادة</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- اختبار تحديد المستوى -->
+    <section id="placement-test" class="section" style="display:none;">
+        <div class="container">
+            <h2 class="section-title">اختبار تحديد المستوى</h2>
+            <div class="test-container">
+                <div id="testStart">
+                    <h3>مرحباً بك في اختبار تحديد المستوى!</h3>
+                    <p>هذا الاختبار يساعدنا في فهم مستواك الحالي لتصميم رحلة تعليمية مخصصة لك</p>
+                    <button class="btn-primary" onclick="startTest()">ابدأ الاختبار</button>
+                </div>
+                <div id="testQuestions" style="display:none;">
+                    <div class="test-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span id="questionCounter">السؤال 1 من 10</span>
+                    </div>
+                    <div class="question-card" id="questionCard">
+                        <h3 id="questionText">جاري تحميل السؤال...</h3>
+                        <div class="options" id="optionsContainer"></div>
+                    </div>
+                </div>
+                <div id="testResult" style="display:none;">
+                    <div class="result-card">
+                        <h3>نتيجة اختبار تحديد المستوى</h3>
+                        <div class="result-level" id="resultLevel"></div>
+                        <p id="resultMessage"></p>
+                        <button class="btn-primary" onclick="goToDashboard()">الذهاب إلى لوحة التحكم</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- التواصل -->
+    <section id="contact" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">تواصل معنا</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">💬</span>
+                        <div>
+                            <h3>واتساب</h3>
+                            <a href="https://wa.me/201234567890" target="_blank">تواصل عبر واتساب</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <div>
+                            <h3>البريد الإلكتروني</h3>
+                            <a href="mailto:info@elh.com">info@elh.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📍</span>
+                        <div>
+                            <h3>الموقع</h3>
+                            <p>القاهرة، مصر</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="contactName">الاسم</label>
+                        <input type="text" id="contactName" required placeholder="اسمك الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">البريد الإلكتروني</label>
+                        <input type="email" id="contactEmail" required placeholder="بريدك الإلكتروني">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">الرسالة</label>
+                        <textarea id="contactMessage" required placeholder="كيف يمكننا مساعدتك؟" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">إرسال الرسالة</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ELH</h3>
+                    <p>English Learning Hub<br>شركاء في بناء الإنسان</p>
+                </div>
+                <div class="footer-col">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#home">الرئيسية</a></li>
+                        <li><a href="#about">من نحن</a></li>
+                        <li><a href="#programs">البرامج</a></li>
+                        <li><a href="#contact">تواصل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>تواصل معنا</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Instagram">📸</a>
+                        <a href="#" aria-label="YouTube">🎬</a>
+                        <a href="#" aria-label="WhatsApp">💬</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 ELH - English Learning Hub. جميع الحقوق محفوظة. شركاء في بناء الإنسان.</p>
+            </div>
+        </div>
+    </footer>    <script>
+        // ===== شاشة الترحيب =====
+        function enterSite() {
+            var ws = document.getElementById('welcomeScreen');
+            if (ws) {
+                ws.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                localStorage.setItem('elh_visited', 'true');
+            }
+        }
+
+        (function() {
+            var visited = localStorage.getItem('elh_visited');
+            if (visited) {
+                var ws = document.getElementById('welcomeScreen');
+                if (ws) ws.classList.add('hidden');
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
+        })();
+
+        // ===== تبديل الوضع =====
+        function toggleTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('elh_theme', next);
+            var icon = document.querySelector('.theme-icon');
+            if (icon) icon.textContent = next === 'dark' ? '🌙' : '☀️';
+        }
+
+        (function() {
+            var saved = localStorage.getItem('elh_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+            var icon = document.querySelector('.theme-icon');
+            if (icon) icon.textContent = saved === 'dark' ? '🌙' : '☀️';
+        })();
+
+        // ===== قائمة الموبايل =====
+        function toggleMenu() {
+            var nav = document.getElementById('navLinks');
+            if (nav) nav.classList.toggle('active');
+        }
+
+        document.querySelectorAll('.nav-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                var nav = document.getElementById('navLinks');
+                if (nav) nav.classList.remove('active');
+            });
+        });
+
+        // ===== نموذج التسجيل =====
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var name = document.getElementById('regName').value.trim();
+            var username = document.getElementById('regUsername').value.trim();
+            var password = document.getElementById('regPassword').value;
+            var confirmPassword = document.getElementById('regConfirmPassword').value;
+            var grade = document.getElementById('regGrade').value;
+            var gradeText = document.getElementById('regGrade').selectedOptions[0].text;
+            var father = document.getElementById('regFather').value.trim();
+            var mother = document.getElementById('regMother').value.trim();
+            var guardian = document.getElementById('regGuardian').value.trim();
+            var whatsapp = document.getElementById('regWhatsapp').value.trim();
+            var mobile = document.getElementById('regMobile').value.trim();
+            var email = document.getElementById('regEmail').value.trim();
+
+            if (password !== confirmPassword) {
+                alert('كلمتا المرور غير متطابقتين!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+
+            var studentData = {
+                name: name, username: username, grade: grade, gradeText: gradeText,
+                father: father, mother: mother, guardian: guardian,
+                whatsapp: whatsapp, mobile: mobile, email: email,
+                registeredAt: new Date().toISOString()
+            };
+
+            var students = JSON.parse(localStorage.getItem('elh_students') || '[]');
+            var exists = students.find(function(s) { return s.username === username; });
+            if (exists) {
+                alert('اسم المستخدم موجود مسبقاً! اختر اسماً آخر');
+                return;
+            }
+
+            students.push(studentData);
+            localStorage.setItem('elh_students', JSON.stringify(students));
+            localStorage.setItem('elh_current_student', JSON.stringify(studentData));
+
+            var ss = document.getElementById('successScreen');
+            if (ss) ss.style.display = 'flex';
+
+            setTimeout(function() {
+                if (ss) ss.style.display = 'none';
+                showPlacementTest();
+            }, 3000);
+        });
+
+        // ===== اختبار تحديد المستوى =====
+        function showPlacementTest() {
+            document.querySelectorAll('section').forEach(function(s) {
+                s.style.display = 'none';
+            });
+            document.querySelector('.navbar').style.display = 'none';
+            document.querySelector('.footer').style.display = 'none';
+
+            var test = document.getElementById('placement-test');
+            if (test) {
+                test.style.display = 'block';
+                test.style.paddingTop = '40px';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        var placementQuestions = [
+            { question: "What is the correct form: 'She ___ to school every day'?", options: ["go", "goes", "going", "gone"], correct: 1 },
+            { question: "Choose the correct sentence:", options: ["He don't like apples", "He doesn't likes apples", "He doesn't like apples", "He not like apples"], correct: 2 },
+            { question: "What is the past tense of 'write'?", options: ["writed", "wrote", "written", "writing"], correct: 1 },
+            { question: "'I have been studying for 2 hours' - This is:", options: ["Present Simple", "Present Continuous", "Present Perfect", "Present Perfect Continuous"], correct: 3 },
+            { question: "Choose the correct word: 'The book is ___ the table'", options: ["in", "at", "on", "to"], correct: 2 },
+            { question: "What does 'enormous' mean?", options: ["Small", "Very big", "Fast", "Slow"], correct: 1 },
+            { question: "'If I ___ rich, I would travel the world'", options: ["am", "was", "were", "be"], correct: 2 },
+            { question: "The passive form of 'They built the house' is:", options: ["The house is built", "The house was built", "The house were built", "The house built"], correct: 1 },
+            { question: "Which sentence uses the correct conditional?", options: ["If it rains, I will stay home", "If it rain, I stay home", "If it rained, I will stay home", "If it rains, I would stay home"], correct: 0 },
+            { question: "'She suggested that he ___ earlier'", options: ["leave", "leaves", "leaving", "left"], correct: 0 }
+        ];
+
+        var currentQuestion = 0;
+        var score = 0;
+
+        function startTest() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('testStart').style.display = 'none';
+            document.getElementById('testQuestions').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            var q = placementQuestions[currentQuestion];
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('questionCounter').textContent = 'السؤال ' + (currentQuestion + 1) + ' من ' + placementQuestions.length;
+            document.getElementById('progressFill').style.width = ((currentQuestion / placementQuestions.length) * 100) + '%';
+
+            var container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            q.options.forEach(function(opt, idx) {
+                var btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.type = 'button';
+                btn.onclick = function() { selectAnswer(idx); };
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(idx) {
+            var q = placementQuestions[currentQuestion];
+            var buttons = document.querySelectorAll('.option-btn');
+
+            buttons.forEach(function(b) { b.disabled = true; });
+
+            if (idx === q.correct) {
+                buttons[idx].classList.add('correct');
+                score++;
+            } else {
+                buttons[idx].classList.add('wrong');
+                buttons[q.correct].classList.add('correct');
+            }
+
+            setTimeout(function() {
+                currentQuestion++;
+                if (currentQuestion < placementQuestions.length) {
+                    showQuestion();
+                } else {
+                    showTestResult();
+                }
+            }, 1500);
+        }
+
+        function showTestResult() {
+            document.getElementById('testQuestions').style.display = 'none';
+            document.getElementById('testResult').style.display = 'block';
+            document.getElementById('progressFill').style.width = '100%';
+
+            var pct = (score / placementQuestions.length) * 100;
+            var level, msg;
+
+            if (pct >= 80) {
+                level = '🏆 Advanced - متقدم';
+                msg = 'مستوى ممتاز! أنت جاهز للمحتوى المتقدم والتحديات الكبيرة.';
+            } else if (pct >= 60) {
+                level = '⭐ Intermediate - متوسط';
+                msg = 'مستوى جيد جداً! سنعمل معاً على تطوير مهاراتك للوصول للتميز.';
+            } else if (pct >= 40) {
+                level = '📚 Pre-Intermediate - قبل المتوسط';
+                msg = 'بداية رائعة! لديك أساس جيد وسنبني عليه معاً.';
+            } else {
+                level = '🌱 Beginner - مبتدئ';
+                msg = 'لا تقلق أبداً! سنبدأ معك من الأساسيات ونبني ثقتك خطوة بخطوة.';
+            }
+
+            document.getElementById('resultLevel').textContent = level;
+            document.getElementById('resultMessage').textContent = msg;
+
+            var student = JSON.parse(localStorage.getItem('elh_current_student'));
+            if (student) {
+                student.testScore = score;
+                student.testLevel = level;
+                student.testPercentage = pct;
+                student.testCompleted = true;
+                localStorage.setItem('elh_current_student', JSON.stringify(student));
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // ===== تسجيل الدخول =====
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var username = document.getElementById('loginUsername').value.trim();
+            var password = document.getElementById('loginPassword').value;
+            var students = JSON.parse(localStorage.getItem('elh_students') || '[]');
+            var student = students.find(function(s) { return s.username === username; });
+
+            if (student) {
+                localStorage.setItem('elh_current_student', JSON.stringify(student));
+                alert('تم تسجيل الدخول بنجاح! مرحباً ' + student.name);
+                if (student.testCompleted) {
+                    goToDashboard();
+                } else {
+                    showPlacementTest();
+                }
+            } else {
+                alert('اسم المستخدم غير موجود');
+            }
+        });
+
+        // ===== نسيت كلمة المرور =====
+        document.getElementById('forgotForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var input = document.getElementById('forgotInput').value.trim();
+            alert('تم إرسال رابط استعادة كلمة المرور إلى: ' + input);
+        });
+
+        // ===== نموذج التواصل =====
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+            e.target.reset();
+        });
+
+        // ===== تأثير التمرير =====
+        window.addEventListener('scroll', function() {
+            var nav = document.getElementById('navbar');
+            if (nav) {
+                if (window.scrollY > 100) {
+                    nav.style.padding = '10px 0';
+                    nav.style.boxShadow = '0 5px 20px rgba(0,0,0,0.3)';
+                } else {
+                    nav.style.padding = '15px 0';
+                    nav.style.boxShadow = 'none';
+                }
+            }
+        });
+
+        // ===== تأثيرات الظهور =====
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.about-card, .program-card, .feature-card, .dev-item').forEach(function(el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!-- Dashboard Page -->
+<section id="dashboard" class="dashboard-section" style="display:none;">
+    <!-- Dashboard Navbar -->
+    <nav class="dashboard-navbar">
+        <div class="dashboard-container">
+            <div class="dashboard-logo">ELH Dashboard</div>
+            <div class="dashboard-user-menu">
+                <span id="userGreeting">مرحباً</span>
+                <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active" onclick="showDashboardTab('overview')">
+                    📊 نظرة عامة
+                </button>
+                <button class="sidebar-btn" onclick="showDashboardTab('lessons')">
+                    📚 الدروس
+                </button>
+                <button class="sidebar-btn" onclick="showDashboardTab('progress')">
+                    📈 التقدم
+                </button>
+                <button class="sidebar-btn" onclick="showDashboardTab('achievements')">
+                    🏆 الإنجازات
+                </button>
+                <button class="sidebar-btn" onclick="showDashboardTab('profile')">
+                    👤 الملف الشخصي
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Overview Tab -->
+            <div id="overview-tab" class="dashboard-tab active">
+                <h2>نظرة عامة على تقدمك</h2>
+                
+                <!-- Welcome Card -->
+                <div class="welcome-card">
+                    <h3>مرحباً بك في رحلتك التعليمية! 🎉</h3>
+                    <p id="studentWelcome"></p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📖</div>
+                        <div class="stat-content">
+                            <div class="stat-label">الدروس المكتملة</div>
+                            <div class="stat-value" id="completedLessons">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <div class="stat-label">ساعات التعلم</div>
+                            <div class="stat-value" id="learningHours">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <div class="stat-label">مستويات أكملت</div>
+                            <div class="stat-value" id="completedLevels">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-content">
+                            <div class="stat-label">سلسلة يومية</div>
+                            <div class="stat-value" id="dailyStreak">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Overview -->
+                <div class="progress-section">
+                    <h3>مستوى التقدم العام</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="overallProgress" style="width: 0%"></div>
+                        </div>
+                        <span id="progressPercentage">0%</span>
+                    </div>
+                </div>
+
+                <!-- Placement Test Result -->
+                <div class="placement-result-card">
+                    <h3>نتيجة اختبار تحديد المستوى</h3>
+                    <div class="level-badge" id="placementLevel">غير محدد</div>
+                    <p id="placementMessage">أكمل اختبار تحديد المستوى لمعرفة مستواك</p>
+                </div>
+            </div>
+
+            <!-- Lessons Tab -->
+            <div id="lessons-tab" class="dashboard-tab" style="display:none;">
+                <h2>الدروس المتاحة</h2>
+                <div class="lessons-grid" id="lessonsContainer">
+                    <div class="lesson-card">
+                        <div class="lesson-icon">🔤</div>
+                        <h4>تعلم الحروف</h4>
+                        <p>تعرف على أساسيات الحروف الإنجليزية</p>
+                        <button class="btn-secondary" onclick="alert('سيتم فتح الدرس قريباً')">ابدأ</button>
+                    </div>
+                    <div class="lesson-card">
+                        <div class="lesson-icon">🗣️</div>
+                        <h4>النطق</h4>
+                        <p>تحسين مهارات النطق والاستماع</p>
+                        <button class="btn-secondary" onclick="alert('سيتم فتح الدرس قريباً')">ابدأ</button>
+                    </div>
+                    <div class="lesson-card">
+                        <div class="lesson-icon">📝</div>
+                        <h4>الكتابة</h4>
+                        <p>تطوير مهارات الكتابة والإملاء</p>
+                        <button class="btn-secondary" onclick="alert('سيتم فتح الدرس قريباً')">ابدأ</button>
+                    </div>
+                    <div class="lesson-card">
+                        <div class="lesson-icon">📖</div>
+                        <h4>القراءة</h4>
+                        <p>تحسين مهارات القراءة والفهم</p>
+                        <button class="btn-secondary" onclick="alert('سيتم فتح الدرس قريباً')">ابدأ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div id="progress-tab" class="dashboard-tab" style="display:none;">
+                <h2>تقارير التقدم</h2>
+                <div class="progress-details">
+                    <div class="progress-item">
+                        <h4>اللغة الإنجليزية</h4>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="englishProgress" style="width: 45%"></div>
+                            </div>
+                            <span id="englishPercentage">45%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <h4>القواعد</h4>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="grammarProgress" style="width: 60%"></div>
+                            </div>
+                            <span id="grammarPercentage">60%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <h4>المفردات</h4>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="vocabularyProgress" style="width: 55%"></div>
+                            </div>
+                            <span id="vocabularyPercentage">55%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <h4>الاستماع</h4>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="listeningProgress" style="width: 50%"></div>
+                            </div>
+                            <span id="listeningPercentage">50%</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <h4>التحدث</h4>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="speakingProgress" style="width: 40%"></div>
+                            </div>
+                            <span id="speakingPercentage">40%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>النشاطات الأخيرة</h3>
+                    <div class="activity-list" id="activityList">
+                        <p class="empty-state">لا توجد نشاطات حالياً</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div id="achievements-tab" class="dashboard-tab" style="display:none;">
+                <h2>الإنجازات والشارات</h2>
+                <div class="achievements-grid" id="achievementsContainer">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🌟</div>
+                        <h4>البداية الموفقة</h4>
+                        <p>أكمل أول درس</p>
+                        <span class="achievement-status">مقفول</span>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">📚</div>
+                        <h4>عاشق القراءة</h4>
+                        <p>اقرأ 10 قصص</p>
+                        <span class="achievement-status">مقفول</span>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🎯</div>
+                        <h4>محارب المثابرة</h4>
+                        <p>تعلم لمدة 7 أيام متتالية</p>
+                        <span class="achievement-status">مقفول</span>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🏆</div>
+                        <h4>أسطورة التعلم</h4>
+                        <p>اكمل 50 درس</p>
+                        <span class="achievement-status">مقفول</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="dashboard-tab" style="display:none;">
+                <h2>الملف الشخصي</h2>
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">👤</div>
+                        <div class="profile-info">
+                            <h3 id="profileName">اسم الطالب</h3>
+                            <p id="profileGrade">المرحلة الدراسية</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label">اسم المستخدم:</span>
+                            <span class="detail-value" id="profileUsername">username</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">البريد الإلكتروني:</span>
+                            <span class="detail-value" id="profileEmail">email@example.com</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">رقم الموبايل:</span>
+                            <span class="detail-value" id="profilePhone">+20XXXXXXXXX</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">رقم الواتساب:</span>
+                            <span class="detail-value" id="profileWhatsapp">+20XXXXXXXXX</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">ولي الأمر:</span>
+                            <span class="detail-value" id="profileGuardian">غير محدد</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">تاريخ التسجيل:</span>
+                            <span class="detail-value" id="profileJoinDate">-</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button class="btn-secondary" onclick="alert('سيتم تفعيل التعديل قريباً')">تعديل الملف</button>
+                        <button class="btn-danger" onclick="logout()">تسجيل الخروج</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</section>
