@@ -1609,5 +1609,298 @@
             observer.observe(el);
         });
     </script>
+    <script>
+(function () {
+    const DASHBOARD_URL = 'dashboard.html';
+    const REDIRECT_AFTER_RESULT_MS = 2500;
+
+    function readJSON(key, fallback) {
+        try {
+            return JSON.parse(localStorage.getItem(key)) || fallback;
+        } catch (e) {
+            return fallback;
+        }
+    }
+
+    function getStudents() {
+        return readJSON('elh_students', []);
+    }
+
+    function saveStudents(students) {
+        localStorage.setItem('elh_students', JSON.stringify(students));
+    }
+
+    function getCurrentStudent() {
+        return readJSON('elh_current_student', null);
+    }
+
+    function saveCurrentStudent(student) {
+        localStorage.setItem('elh_current_student', JSON.stringify(student));
+    }
+
+    function isCompleted(value) {
+        return value === true || value === 'true' || value === 1 || value === '1';
+    }
+
+    function mergeStudent(updatedStudent) {
+        if (!updatedStudent || !updatedStudent.username) return;
+
+        const students = getStudents();
+        const index = students.findIndex(function (s) {
+            return s.username === updatedStudent.username;
+        });
+
+        if (index !== -1) {
+            students[index] = Object.assign({}, students[index], updatedStudent);
+        } else {
+            students.push(updatedStudent);
+        }
+
+        saveStudents(students);
+    }
+
+    function getSelectedText(selectElement) {
+        if (!selectElement || !selectElement.selectedOptions || !selectElement.selectedOptions[0]) {
+            return '';
+        }
+        return selectElement.selectedOptions[0].textContent;
+    }
+
+    // التحويل إلى لوحة التحكم
+    window.goToDashboard = function () {
+        window.location.href = DASHBOARD_URL;
+    };
+
+    // إصلاح نتيجة اختبار تحديد المستوى
+    window.showTestResult = function () {
+        const testQuestions = document.getElementById('testQuestions');
+        const testResult = document.getElementById('testResult');
+        const progressFill = document.getElementById('progressFill');
+
+        if (testQuestions) testQuestions.style.display = 'none';
+        if (testResult) testResult.style.display = 'block';
+        if (progressFill) progressFill.style.width = '100%';
+
+        const totalQuestions =
+            typeof placementQuestions !== 'undefined' && placementQuestions.length
+                ? placementQuestions.length
+                : 10;
+
+        const finalScore = typeof score !== 'undefined' ? score : 0;
+        const percentage = (finalScore / totalQuestions) * 100;
+
+        let level;
+        let message;
+
+        if (percentage >= 80) {
+            level = '🏆 Advanced - متقدم';
+            message = 'مستوى ممتاز! أنت جاهز للمحتوى المتقدم والتحديات الكبيرة.';
+        } else if (percentage >= 60) {
+            level = '⭐ Intermediate - متوسط';
+            message = 'مستوى جيد جداً! سنعمل معاً على تطوير مهاراتك للوصول للتميز.';
+        } else if (percentage >= 40) {
+            level = '📚 Pre-Intermediate - قبل المتوسط';
+            message = 'بداية رائعة! لديك أساس جيد وسنبني عليه معاً.';
+        } else {
+            level = '🌱 Beginner - مبتدئ';
+            message = 'لا تقلق أبداً! سنبدأ معك من الأساسيات ونبني ثقتك خطوة بخطوة.';
+        }
+
+        const resultLevel = document.getElementById('resultLevel');
+        const resultMessage = document.getElementById('resultMessage');
+
+        if (resultLevel) resultLevel.textContent = level;
+        if (resultMessage) resultMessage.textContent = message;
+
+        // حفظ نتيجة الاختبار في الطالب الحالي وقائمة الطلاب
+        let student = getCurrentStudent();
+
+        if (student) {
+            student.testScore = finalScore;
+            student.testLevel = level;
+            student.testPercentage = percentage;
+            student.testCompleted = true;
+            student.testCompletedAt = new Date().toISOString();
+
+            saveCurrentStudent(student);
+            mergeStudent(student);
+        }
+
+        const dashboardBtn = document.querySelector('#testResult button');
+        if (dashboardBtn) {
+            dashboardBtn.textContent = 'جاري فتح لوحة التحكم...';
+        }
+
+        // التحويل التلقائي إلى لوحة التحكم بعد عرض النتيجة
+        setTimeout(function () {
+            window.goToDashboard();
+        }, REDIRECT_AFTER_RESULT_MS);
+    };
+
+    // احتياط لو كان اسم الدالة في نسختك showResult وليس showTestResult
+    window.showResult = window.showTestResult;
+
+    // إعادة ربط نموذج التسجيل بدون تضارب مع الكود القديم
+    function bindRegisterForm() {
+        const oldForm = document.getElementById('registerForm');
+        if (!oldForm) return;
+
+        const form = oldForm.cloneNode(true);
+        oldForm.parentNode.replaceChild(form, oldForm);
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const gradeSelect = document.getElementById('regGrade');
+            const grade = gradeSelect.value;
+            const gradeText = getSelectedText(gradeSelect);
+            const father = document.getElementById('regFather').value.trim();
+            const mother = document.getElementById('regMother').value.trim();
+            const guardian = document.getElementById('regGuardian').value.trim();
+            const whatsapp = document.getElementById('regWhatsapp').value.trim();
+            const mobile = document.getElementById('regMobile').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+
+            if (password !== confirmPassword) {
+                alert('كلمتا المرور غير متطابقتين!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+
+            const students = getStudents();
+
+            const exists = students.find(function (s) {
+                return s.username === username;
+            });
+
+            if (exists) {
+                alert('اسم المستخدم موجود مسبقاً! اختر اسماً آخر');
+                return;
+            }
+
+            const studentData = {
+                name: name,
+                username: username,
+                password: password,
+                grade: grade,
+                gradeText: gradeText,
+                father: father,
+                mother: mother,
+                guardian: guardian,
+                whatsapp: whatsapp,
+                mobile: mobile,
+                email: email,
+                testCompleted: false,
+                testScore: null,
+                testLevel: null,
+                testPercentage: null,
+                registeredAt: new Date().toISOString()
+            };
+
+            students.push(studentData);
+            saveStudents(students);
+            saveCurrentStudent(studentData);
+
+            const successScreen = document.getElementById('successScreen');
+            if (successScreen) successScreen.style.display = 'flex';
+
+            setTimeout(function () {
+                if (successScreen) successScreen.style.display = 'none';
+
+                if (typeof currentQuestion !== 'undefined') currentQuestion = 0;
+                if (typeof score !== 'undefined') score = 0;
+
+                const testStart = document.getElementById('testStart');
+                const testQuestions = document.getElementById('testQuestions');
+                const testResult = document.getElementById('testResult');
+
+                if (testStart) testStart.style.display = 'block';
+                if (testQuestions) testQuestions.style.display = 'none';
+                if (testResult) testResult.style.display = 'none';
+
+                if (typeof showPlacementTest === 'function') {
+                    showPlacementTest();
+                }
+            }, 3000);
+        });
+    }
+
+    // إعادة ربط نموذج تسجيل الدخول
+    function bindLoginForm() {
+        const oldForm = document.getElementById('loginForm');
+        if (!oldForm) return;
+
+        const form = oldForm.cloneNode(true);
+        oldForm.parentNode.replaceChild(form, oldForm);
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            let students = getStudents();
+
+            let student = students.find(function (s) {
+                return s.username === username && String(s.password || '') === password;
+            });
+
+            // دعم الحسابات القديمة التي تم إنشاؤها قبل حفظ كلمة المرور
+            if (!student) {
+                student = students.find(function (s) {
+                    return s.username === username && !s.password;
+                });
+
+                if (student) {
+                    student.password = password;
+                    mergeStudent(student);
+                    students = getStudents();
+                }
+            }
+
+            if (!student) {
+                alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+                return;
+            }
+
+            // لو كان الطالب الحالي يحمل نتيجة أحدث، ندمجها
+            const currentStudent = getCurrentStudent();
+
+            if (
+                currentStudent &&
+                currentStudent.username === username &&
+                isCompleted(currentStudent.testCompleted)
+            ) {
+                student = Object.assign({}, student, currentStudent);
+                mergeStudent(student);
+            }
+
+            saveCurrentStudent(student);
+
+            alert('تم تسجيل الدخول بنجاح! مرحباً ' + student.name);
+
+            // اختبار تحديد المستوى مرة واحدة فقط
+            if (isCompleted(student.testCompleted)) {
+                window.goToDashboard();
+            } else {
+                if (typeof showPlacementTest === 'function') {
+                    showPlacementTest();
+                }
+            }
+        });
+    }
+
+    bindRegisterForm();
+    bindLoginForm();
+})();
+</script>
 </body>
 </html>
